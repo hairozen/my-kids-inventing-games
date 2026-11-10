@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#151a2b">
+  <meta name="description" content="בחרו בהארי, בהרמיוני או ברון וצאו למרוץ קסום בדרך להוגוורטס.">
+  <title>המרוץ להוגוורטס · מרוץ של קסם</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+<link rel="canonical" href="https://my-kids-inventing-games.hai-rozen.workers.dev/games/hogwarts/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:title" content="המרוץ להוגוורטס · המשחק של לביא">
+<meta property="og:description" content="בחרו דמות, הגרילו כוח וצאו למרוץ קסום אל הטירה.">
+<meta property="og:url" content="https://my-kids-inventing-games.hai-rozen.workers.dev/games/hogwarts/">
+<meta property="og:image" content="https://my-kids-inventing-games.hai-rozen.workers.dev/assets/hogwarts-race.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+  <canvas id="world" aria-label="עולם המשחק בתלת־ממד: הטירה, הדמויות ומסלול המרוץ"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="המרוץ להוגוורטס — התחלה"><span class="crest" aria-hidden="true">ϟ</span><span>המרוץ להוגוורטס<small>A RACE OF MAGIC</small></span></a>
+    <div class="top-actions"><a class="home-link" href="../../" aria-label="חזרה למשחקים"><span aria-hidden="true">↗</span><span>חזרה למשחקים</span></a><button id="sound" class="icon-button" aria-label="השתקת צלילים" title="צלילים">♫</button><button id="pause" class="icon-button hidden" aria-label="השהיית המשחק" title="השהיה · Esc">Ⅱ</button><span class="chapter" id="chapter">ההרפתקה מתחילה כאן</span></div>
+  </header>
+
+  <main>
+    <section id="menu" class="menu-screen">
+      <div class="intro"><p class="eyebrow"><span></span> שלושה חברים. חמישה כוחות. מנצח אחד.</p><h1>הדרך להוגוורטס<br><em>מתחילה בקסם שלך.</em></h1><p class="intro-copy">בחרו דמות, הגרילו כוח וצאו למרוץ.<br>רק וולדמורט עומד ביניכם לבין קו הסיום.</p><div class="world-label"><span>✦</span> חצר הטירה <i>·</i> שעת הדמדומים</div></div>
+      <div class="selection-panel"><div class="section-label"><span><b>01</b> בחרו את הדמות שלכם</span><small>אותו קסם. סיפור אחר.</small></div><div id="characters" class="characters" role="group" aria-label="בחירת דמות"></div><div class="menu-bottom"><button id="draw" class="primary-button"><span class="button-spark">✧</span><span>תור <small>הגרילו את הכוח שלכם</small></span><span class="button-arrow">←</span></button><p class="controls-hint"><kbd>←</kbd><kbd>→</kbd> לזוז <span>·</span> <kbd>↑</kbd> לקפוץ <span>·</span> <kbd>רווח</kbd> קסם</p></div></div>
+      <span class="scene-caption">עולם קטן, קסם גדול.</span>
+    </section>
+
+    <section id="power-screen" class="modal-layer hidden" aria-labelledby="power-title"><div class="power-card"><p class="eyebrow">הקסם בחר בכם</p><div id="power-orbit" class="power-orbit">✦</div><h2 id="power-title">מגלים את הכוח…</h2><p id="power-description"></p><div id="power-note" class="power-note">הכוח נשאר איתכם לכל המרוץ.<br>גם המתחרים יקבלו אותו, והמסלול יותאם אליו.</div><button id="start" class="primary-button hidden">קדימה, למרוץ! <span>←</span></button><button id="back-menu" class="text-button">חזרה לבחירת דמות</button></div></section>
+
+    <section id="hud" class="hud hidden" aria-label="מצב המרוץ"><div class="race-top"><div class="position-box"><span id="place">1</span><div>המקום שלכם<small>מתוך 3 מתחרים</small></div></div><div class="race-progress"><div class="progress-label"><span>חצר הטירה</span><span id="remaining">אל קו הסיום</span><span>וולדמורט ⚡</span></div><div class="progress-track"><div id="progress-fill"></div><div id="race-markers"></div></div></div><div class="timer-box"><span id="timer">00:00</span><small>זמן המרוץ</small></div></div><div class="standings" id="standings"></div><div class="bottom-hud"><div class="active-power"><span id="hud-power-icon">✦</span><div><small>הכוח שלכם</small><strong id="hud-power-name"></strong><span id="power-status">רווח להפעלה</span></div><div class="cooldown-ring" id="cooldown-ring">␣</div></div><div class="task-prompt" id="task-prompt"></div><div class="keyboard-help"><kbd>←</kbd><kbd>→</kbd> תנועה <kbd>↑</kbd> קפיצה <kbd>רווח</kbd> קסם <kbd>Esc</kbd> השהיה</div></div><div class="battle-panel hidden" id="battle-panel"><p>הקרב על קו הסיום</p><h2>וולדמורט</h2><div class="battle-health"><span>וולדמורט <b id="boss-hp">● ● ●</b></span><span>אתם <b id="player-hp">♥ ♥ ♥</b></span></div><div id="battle-warning">רווח לירי · חצים להתחמקות</div></div><div class="touch-controls"><button data-control="right" aria-label="תנועה ימינה">→</button><button data-control="left" aria-label="תנועה שמאלה">←</button><button data-control="jump" aria-label="קפיצה">↑</button><button data-control="cast" aria-label="הפעלת כוח או ירי קסם">ϟ</button></div></section>
+
+    <div id="countdown" class="countdown hidden" aria-live="polite"></div>
+    <div id="toast" class="toast hidden" role="status"></div>
+    <section id="pause-screen" class="modal-layer hidden"><div class="pause-card"><span class="large-symbol">Ⅱ</span><h2>הקסם יכול לחכות.</h2><p>המרוץ מושהה. מוכנים להמשיך?</p><button id="resume" class="primary-button">ממשיכים במרוץ ←</button><button id="restart" class="text-button">להתחיל מחדש</button></div></section>
+    <section id="result-screen" class="modal-layer hidden" aria-labelledby="result-title"><div class="result-card"><p class="eyebrow" id="result-eyebrow">המרוץ הסתיים</p><div class="result-symbol" id="result-symbol">✦</div><h2 id="result-title"></h2><p id="result-copy"></p><div class="result-stats"><div><strong id="result-time"></strong><span>זמן המשחק</span></div><div><strong id="result-power"></strong><span>הכוח שהוגרל</span></div></div><button id="again" class="primary-button">שחקו שוב <span>↻</span></button></div></section>
+    <section id="error-screen" class="modal-layer hidden"><div class="pause-card"><h2>הקסם צריך רגע</h2><p id="error-copy">לא הצלחנו להפעיל את התלת־ממד. נסו דפדפן מעודכן עם האצת חומרה.</p><button class="primary-button" onclick="location.reload()">ננסה שוב</button></div></section>
+  </main>
+  <footer id="footer"><span>✧ הרפתקה קסומה לשחקן אחד</span><span>יצירת מעריצים · דמויות מצוירות מקוריות</span></footer>
+  <script src="./vendor/babylon.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

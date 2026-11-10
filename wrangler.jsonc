@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-kids-inventing-games",
+  "account_id": "2c3a0fbe4d9de337d421914dd0d4758b",
+  "compatibility_date": "2026-11-08",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

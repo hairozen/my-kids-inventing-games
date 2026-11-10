@@ -1,0 +1,7 @@
+node_modules/
+.local/
+.openai/
+.wrangler/
+.dev.vars*
+.env*
+.DS_Store

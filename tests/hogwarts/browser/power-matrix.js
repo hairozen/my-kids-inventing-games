@@ -1,0 +1,47 @@
+async (page) => {
+  const index=Number(new URL(page.url()).searchParams.get('power')||0);
+  const ids=['flight','speed','sand','ice','stun'];
+  const expected=ids[index], value=(index+.1)/5;
+  const check=(condition,message)=>{if(!condition)throw new Error(message);};
+  await page.route('**/simulation.js',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('trackLength=1200','trackLength=120')});});
+  await page.reload();
+  await page.evaluate(v=>{Math.random=()=>v;},value);
+  const preview=await page.evaluate(async ({power,value})=>{const {createRace}=await import('./simulation.js');const s=createRace({power,seed:Math.floor(value*2**32)});return {first:s.obstacles[0],second:s.obstacles.find(o=>o.z>s.obstacles[0].z)};},{power:expected,value});
+  const character=['harry','hermione','ron'][preview.first.lane+1];
+  await page.locator(`[data-character="${character}"]`).click();
+  await page.locator('#draw').click();await page.locator('#start').waitFor({state:'visible'});
+  check(await page.evaluate(()=>magicRace.power)===expected,'Power draw mismatch');
+  await page.locator('#start').click();await page.waitForTimeout(900);
+  const duringCountdown=await page.evaluate(()=>magicRace.state.racers.every(r=>r.distance===0));
+  check(duringCountdown,'Moved during countdown');
+  await page.waitForFunction(({z})=>{const s=magicRace.state,p=s.racers.find(r=>r.id===s.playerId);return p.distance>=z-17;},{z:preview.first.z},{timeout:15000});
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(70);
+  const active=await page.evaluate(()=>{const s=magicRace.state,p=s.racers.find(r=>r.id===s.playerId);return p.activeUntil>s.time;});
+  check(active,'Power not activated');
+  await page.waitForFunction(id=>magicRace.state.obstacles.find(o=>o.id===id).resolved,preview.first.id,{timeout:8000});
+  const protectedPass=await page.evaluate(()=>{const s=magicRace.state,p=s.racers.find(r=>r.id===s.playerId);return {slowed:p.slowedUntil>s.time,power:s.power};});
+  check(!protectedPass.slowed,expected+' did not protect first obstacle');
+  const moveTo=async x=>{const current=await page.evaluate(()=>{const s=magicRace.state;return s.racers.find(r=>r.id===s.playerId).x;});const difference=x-current;if(Math.abs(difference)<.15)return;const key=difference>0?'ArrowRight':'ArrowLeft';await page.keyboard.down(key);await page.waitForTimeout(Math.abs(difference)/7*1000);await page.keyboard.up(key);};
+  await moveTo(preview.second.lane*3);
+  await page.waitForFunction(id=>magicRace.state.obstacles.find(o=>o.id===id).resolved,preview.second.id,{timeout:12000});
+  const missed=await page.evaluate(()=>{const s=magicRace.state,p=s.racers.find(r=>r.id===s.playerId);return {slowed:p.slowedUntil>s.time,hp:p.battleHp,phase:s.phase};});
+  check(missed.slowed&&missed.hp===3,'Missed obstacle did not slow without damage');
+  await moveTo(0);
+  await page.waitForFunction(()=>magicRace.state.phase==='battle',null,{timeout:15000});
+  await page.waitForTimeout(500);
+  // Real keyboard input: battle aiming, then three centered wand shots.
+  await page.keyboard.press('Space');await page.waitForTimeout(1200);
+  await page.keyboard.press('Space');await page.waitForTimeout(1200);
+  await page.keyboard.press('ArrowUp');await page.keyboard.press('Space');
+  await page.locator('#result-screen').waitFor({state:'visible',timeout:10000});
+  const end=await page.evaluate(()=>{const q=magicRace,s=q.state,p=s.racers.find(r=>r.id===s.playerId);return {winner:s.winnerId,playerId:s.playerId,bossHp:p.bossHp,distance:p.distance,trackLength:s.trackLength,loss:s.lossReason,errors:!document.querySelector('#error-screen').classList.contains('hidden'),fps:BABYLON.Engine.Instances[0].getFps()};});
+  check(end.winner===character,'Expected player victory, got '+JSON.stringify(end));
+  check(end.distance===end.trackLength+8&&end.bossHp===0,'Finish before physical crossing');
+  await page.screenshot({path:`.playwright-mcp/${expected}-victory.png`});
+  await page.locator('#again').click();
+  const reset=await page.evaluate(()=>magicRace.screen==='menu'&&magicRace.state===null);
+  check(reset,'Restart retained race state');
+  await page.unroute('**/simulation.js');
+  return {power:expected,character,course:120,countdown:duringCountdown,protectedPass,missed,end,reset};
+}
