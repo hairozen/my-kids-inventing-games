@@ -12,6 +12,8 @@ Made by **Lavie (לביא)** and **Ella (אלה)**, with coding agents as their 
 
 The kids independently use their voices to tell coding agents what to build: how a game should look, how it should work, and what they want to change next. They invent the rules, answer the agents’ questions, play the result, and ask for changes. The agents turn their instructions into code.
 
+[![The family game hub with all four games by Lavie and Ella](public/assets/landing-page.png)](https://my-kids-inventing-games.hai-rozen.workers.dev/)
+
 ## 🪄 Lavie’s Hogwarts race
 
 Choose Harry, Hermione, or Ron, draw a magical power, and race the other two characters toward the castle. Use your power to cross obstacles, then face Voldemort before the finish line.
@@ -32,6 +34,8 @@ Catch colorful water droplets with funny faces before they disappear. You have o
 
 A first-person paint battle invented by Lavie. Join two computer teammates against three opponents, collect golden keys, and capture the three middle forts. Home forts stay protected. A round lasts three minutes; the team holding more forts wins. Easy, medium, and hard change the opponents’ firing speed and aim.
 
+[![Lavie’s Fortress Cannons: a first-person view of the forts and golden keys](public/assets/fortress-cannons.png)](https://my-kids-inventing-games.hai-rozen.workers.dev/games/fortress-cannons/)
+
 Use **arrow keys** to move, the **mouse** to look sideways, **Space** to fire paint, and **Enter** to place a guard after walking into a glowing circle. **Escape** pauses and releases the mouse. If the browser does not capture the mouse, drag on the game view to look. The hero’s single heart takes five hits; guards have three hearts. Soft original music has a mute button.
 
 The first version uses a ready-made hero; character customization is deferred. The confirmed rules and explicitly chosen first-version defaults are in [the design notes](docs/third-game-design.md). All new geometry, game code, and music are original. The game reuses this repository’s bundled Babylon.js runtime.
@@ -41,6 +45,8 @@ The first version uses a ready-made hero; character customization is deferred. T
 ## 👑 Ella’s princess race
 
 Ella plays as Belle (בל), racing Felice (פליס) and Torres (טורס) through a palace garden. Belle moves forward automatically: left/right arrows steer, up jumps, and holding Space sprints. On-screen buttons support touch. The obstacles are spaced apart; bumping one only slows the racer briefly. The first princess across the finish line gets a sign with her name and fireworks, then the race can be played again.
+
+[![Ella’s princess race: Belle, Felice, and Torres racing through the palace garden](public/assets/princess-race.png)](https://my-kids-inventing-games.hai-rozen.workers.dev/games/princess-race/)
 
 This is an independent game with original artwork and rules. [The glossary](GLOSSARY.md) records each child’s characters and game terms in separate sections.
 
@@ -77,6 +83,7 @@ The games use plain HTML, CSS, and JavaScript. Hogwarts and Fortress Cannons sha
 | [GLOSSARY.md](GLOSSARY.md) | Separate game vocabularies for Lavie and Ella |
 | `docs/` | Fortress Cannons design decisions and historical verification |
 | [AGENTS.md](AGENTS.md) | Guidance for agents working with the children |
+| [CLAUDE.md](CLAUDE.md) | Imports the shared repository guidance from AGENTS.md |
 | `wrangler.jsonc` | Personal Cloudflare Worker configuration |
 
 Browser scenarios in [tests/hogwarts/browser](tests/hogwarts/browser/README.md) are separate from the model tests. Passing model tests does not establish browser or real-device coverage.
