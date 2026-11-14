@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "check": "node scripts/check.mjs",
-    "test": "node --test tests/hogwarts/*.test.js tests/droplets/*.test.js",
+    "test": "node --test tests/hogwarts/*.test.js tests/droplets/*.test.js tests/fortress-cannons/*.test.js tests/princess-race/*.test.js",
     "preview": "wrangler dev",
     "deploy": "npm run check && npm test && wrangler deploy"
   },

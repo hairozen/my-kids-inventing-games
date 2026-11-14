@@ -28,6 +28,24 @@ Catch colorful water droplets with funny faces before they disappear. You have o
 
 **[Play Ella’s game →](https://my-kids-inventing-games.hai-rozen.workers.dev/games/droplets/)** · Tap or click · 60 seconds per round
 
+## 🏰 Lavie’s Fortress Cannons — תותחי המבצרים
+
+A first-person paint battle invented by Lavie. Join two computer teammates against three opponents, collect golden keys, and capture the three middle forts. Home forts stay protected. A round lasts three minutes; the team holding more forts wins. Easy, medium, and hard change the opponents’ firing speed and aim.
+
+Use **arrow keys** to move, the **mouse** to look sideways, **Space** to fire paint, and **Enter** to place a guard after walking into a glowing circle. **Escape** pauses and releases the mouse. If the browser does not capture the mouse, drag on the game view to look. The hero’s single heart takes five hits; guards have three hearts. Soft original music has a mute button.
+
+The first version uses a ready-made hero; character customization is deferred. The confirmed rules and explicitly chosen first-version defaults are in [the design notes](docs/third-game-design.md). All new geometry, game code, and music are original. The game reuses this repository’s bundled Babylon.js runtime.
+
+**[Play Fortress Cannons →](https://my-kids-inventing-games.hai-rozen.workers.dev/games/fortress-cannons/)**
+
+## 👑 Ella’s princess race
+
+Ella plays as Belle (בל), racing Felice (פליס) and Torres (טורס) through a palace garden. Belle moves forward automatically: left/right arrows steer, up jumps, and holding Space sprints. On-screen buttons support touch. The obstacles are spaced apart; bumping one only slows the racer briefly. The first princess across the finish line gets a sign with her name and fireworks, then the race can be played again.
+
+This is an independent game with original artwork and rules. [The glossary](GLOSSARY.md) records each child’s characters and game terms in separate sections.
+
+**[Play the princess race →](https://my-kids-inventing-games.hai-rozen.workers.dev/games/princess-race/)**
+
 ## 🛠 Run locally
 
 Use Node.js 26.12.0 (`.nvmrc`, managed with mise).
@@ -44,7 +62,7 @@ npm run check
 npm test
 ```
 
-The games use plain HTML, CSS, and JavaScript. Hogwarts includes a local Babylon.js runtime. There is no game backend or database. Game text is in Hebrew, with right-to-left layouts and a home button in each game.
+The games use plain HTML, CSS, and JavaScript. Hogwarts and Fortress Cannons share the local Babylon.js runtime bundled under Hogwarts’ vendor directory. There is no game backend or database. Game text is in Hebrew, with right-to-left layouts and a home button in each game.
 
 ## 🗂 Find your way around
 
@@ -53,11 +71,17 @@ The games use plain HTML, CSS, and JavaScript. Hogwarts includes a local Babylon
 | `public/` | Family game hub and shared screenshots |
 | `public/games/hogwarts/` | Lavie’s 3D racing game |
 | `public/games/droplets/` | Ella’s droplet-catching game |
-| `tests/` | 28 deterministic game model and simulation tests |
+| `public/games/fortress-cannons/` | Lavie’s fortress paint game |
+| `public/games/princess-race/` | Ella’s princess race |
+| `tests/` | Deterministic game model and simulation tests |
+| [GLOSSARY.md](GLOSSARY.md) | Separate game vocabularies for Lavie and Ella |
+| `docs/` | Fortress Cannons design decisions and historical verification |
 | [AGENTS.md](AGENTS.md) | Guidance for agents working with the children |
 | `wrangler.jsonc` | Personal Cloudflare Worker configuration |
 
 Browser scenarios in [tests/hogwarts/browser](tests/hogwarts/browser/README.md) are separate from the model tests. Passing model tests does not establish browser or real-device coverage.
+
+The [Fortress Cannons verification](docs/fortress-cannons-verification.md) and [princess race verification](tests/princess-race/README.md) preserve their original local checks from November 13, 2026. Both games were subsequently deployed with the four-game hub on November 14, 2026; the combined 49 tests passed, all four live pages loaded, and both new games started and paused in browser checks.
 
 ## ☁️ Deploy to Cloudflare
 
@@ -76,10 +100,10 @@ Before deploying a fork, change the Worker name and account ID in `wrangler.json
 
 ## 🔎 Discovery
 
-The website includes `robots.txt`, a three-page sitemap, canonical URLs, and sharing metadata. These help crawlers discover the games; search engines decide whether and when to index them. GitHub manages crawling of repository pages itself; a repository’s own `robots.txt` cannot control github.com.
+The website includes `robots.txt`, a sitemap, canonical URLs, and sharing metadata. These help crawlers discover the games; search engines decide whether and when to index them. GitHub manages crawling of repository pages itself; a repository’s own `robots.txt` cannot control github.com.
 
 ## ✨ Credits
 
 **Game concepts and creative direction: Lavie and Ella.** Implementation assistance: coding agents.
 
-These are original stylized fan-game visuals. Harry Potter names and the fictional world belong to their respective rights holders. This project is not affiliated with or endorsed by them. The bundled Babylon.js runtime retains its [Apache 2.0 license](public/games/hogwarts/vendor/BABYLON-LICENSE.md). No project-wide open-source license has been selected yet; public visibility alone does not grant a general reuse license.
+These are original stylized fan-game visuals. Harry Potter names and the fictional world, and Disney’s Belle, belong to their respective rights holders. This project is not affiliated with or endorsed by them. The bundled Babylon.js runtime retains its [Apache 2.0 license](public/games/hogwarts/vendor/BABYLON-LICENSE.md). No project-wide open-source license has been selected yet; public visibility alone does not grant a general reuse license.

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#203b43">
+  <meta name="description" content="תותחי המבצרים — משחק שהמציא לביא. אוספים מפתחות, כובשים מבצרים ויורים צבע, דרך עיני הגיבור.">
+  <title>תותחי המבצרים — המשחק של לביא</title>
+  <link rel="canonical" href="https://my-kids-inventing-games.hai-rozen.workers.dev/games/fortress-cannons/">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="../hogwarts/vendor/babylon.js" defer></script>
+  <script src="main.js" type="module"></script>
+</head>
+<body>
+  <canvas id="world" tabindex="0" aria-label="עולם תותחי המבצרים. חיצים לתנועה, עכבר למבט, רווח לירי, Enter להצבת שומר ו־Escape לעצירה."></canvas>
+  <header class="topbar">
+    <a class="home" href="../../">↗ כל המשחקים</a>
+    <span class="brand">תותחי המבצרים <small>נוצר על ידי לביא</small></span>
+    <div class="toolbar"><button id="sound" aria-pressed="true" aria-label="כיבוי מוזיקה">♫ מוזיקה</button><button id="pause" hidden>Ⅱ עצירה</button></div>
+  </header>
+
+  <main id="welcome" class="screen welcome">
+    <div class="intro-panel">
+      <span class="eyebrow">ההרפתקה החדשה של לביא</span>
+      <h1>תותחי<br><span>המבצרים</span><i aria-hidden="true">✦</i></h1>
+      <p class="lead">שלושה מבצרים. שתי קבוצות.<br>איזה צבע ינצח?</p>
+      <p class="story">אתה ושני חברים יוצאים לקרב של צבע! אספו מפתחות, צבעו את המבצרים בכחול והציבו שומרים שיגנו עליהם.</p>
+      <fieldset class="difficulty"><legend>בוחרים רמת קושי</legend><label><input type="radio" name="difficulty" value="easy" checked><span>קל <small>מתחילים בנחת</small></span></label><label><input type="radio" name="difficulty" value="medium"><span>בינוני <small>מוכנים לאתגר</small></span></label><label><input type="radio" name="difficulty" value="hard"><span>קשה <small>בלי לוותר!</small></span></label></fieldset>
+      <button class="primary" id="start">יוצאים למבצרים <span aria-hidden="true">←</span></button>
+      <div class="session-note">מחשב ומקלדת · סיבוב של 3 דקות · גיבור מוכן למשחק</div>
+      <div class="controls" aria-label="מקשי המשחק"><span><kbd>↑ ↓ ← →</kbd> תנועה</span><span><kbd>עכבר</kbd> מבט לצדדים</span><span><kbd>רווח</kbd> ירי צבע</span><span><kbd>Enter</kbd> שומר</span></div>
+    </div>
+    <div class="world-caption"><span class="caption-star">✦</span><div>העולם מחכה לך<small>מצא מפתח זהוב. הבא אותו לשער של מבצר.</small></div></div>
+  </main>
+
+  <section id="hud" hidden aria-label="מצב המשחק">
+    <div class="match-score"><span class="blue-team">הכחולים <b id="blue-score">0</b></span><div class="clock"><strong id="time">3:00</strong><small>עד סוף הסיבוב</small></div><span class="coral-team"><b id="coral-score">0</b> האלמוגים</span></div>
+    <div id="fort-status" class="fort-status" aria-label="בעלות על המבצרים"></div>
+    <div class="crosshair" aria-hidden="true"><span></span></div>
+    <div id="hit-flash" aria-hidden="true"></div>
+    <div class="lower-hud"><div class="health-card"><span class="heart" aria-hidden="true">♥<i id="heart-fill">♥</i></span><div><b id="health-label">הלב שלך</b><small id="health-value">5 מתוך 5</small></div></div><div class="inventory"><span id="key-status">⚿ צריך מפתח</span><span id="guard-status">◎ חפש עיגול לשומר</span></div></div>
+    <div class="objective"><span id="objective-arrow" aria-hidden="true">↑</span><span id="objective-text">חפש מפתח זהוב</span></div>
+    <p id="toast" role="status" aria-live="polite"></p>
+    <div class="playing-controls">חיצים לתנועה <em>·</em> עכבר למבט <em>·</em> רווח לירי <em>·</em> Enter לשומר <em>·</em> Escape לעצירה</div>
+  </section>
+
+  <section id="pause-screen" class="screen modal-screen" hidden aria-labelledby="pause-title"><div class="modal"><span class="eyebrow">הזמן עוצר איתך</span><h2 id="pause-title">הפסקה קטנה</h2><p>המבצרים מחכים. חוזרים כשמוכנים.</p><button class="primary" id="resume">ממשיכים לשחק ←</button><button class="secondary" id="restart-paused">סיבוב חדש</button><a href="../../">חזרה לכל המשחקים</a></div></section>
+  <section id="result-screen" class="screen modal-screen" hidden aria-labelledby="result-title"><div class="modal"><span class="eyebrow">שלוש דקות של צבע</span><h2 id="result-title">הסיבוב נגמר!</h2><p id="result-copy"></p><div class="result-score" id="result-score"></div><button class="primary" id="again">עוד סיבוב ←</button><button class="secondary" id="change-difficulty">בחירת רמת קושי</button><a href="../../">חזרה לכל המשחקים</a></div></section>
+  <section id="error-screen" class="screen modal-screen" hidden role="alert"><div class="modal"><h2>לא הצלחנו לפתוח את העולם</h2><p id="error-message">נסה לרענן את הדף או לפתוח בדפדפן שתומך בתלת־ממד.</p><a class="primary" href="../../">חזרה לכל המשחקים</a></div></section>
+  <noscript>כדי לשחק בתותחי המבצרים צריך לאפשר JavaScript בדפדפן. <a href="../../">חזרה לכל המשחקים</a></noscript>
+</body>
+</html>
