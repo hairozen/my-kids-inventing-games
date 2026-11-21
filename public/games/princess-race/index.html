@@ -1,8 +1,66 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#214d43"><meta name="description" content="מרוץ הנסיכות של אלה: שחקי בתור בל, קפצי ורוצי בגני הארמון מול פליס וטורס. משחק משפחתי בעברית למחשב ולטלפון."><title>מרוץ הנסיכות של אלה</title><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"></head>
-<body><main class="app"><header class="top"><a class="home" href="../../" aria-label="חזרה לבית המשחקים">⌂ <span>בית המשחקים</span></a><div class="brand"><span class="eyebrow">סיפור, שמלה והרפתקה</span><h1>מרוץ הנסיכות <em>של אלה</em></h1></div><span class="credit">יצרה: אלה ♡</span></header>
-<section class="arena" aria-label="מסלול המרוץ בגני הארמון"><canvas id="game" aria-label="בל, פליס וטורס מתחרות בדרך לארמון. השתמשי בחצים כדי לזוז ולקפוץ וברווח כדי לרוץ מהר."></canvas><div class="hud" hidden><div class="position"><small>המקום שלך</small><strong id="rank">1 <span>/ 3</span></strong></div><div class="race-progress"><div class="progress-label"><span>הדרך לארמון</span><b id="percent">0%</b></div><div class="progress-track"><i id="progress"></i></div></div><button id="pause" class="pause" aria-label="השהיית המרוץ">Ⅱ</button></div><div id="status" class="status" hidden></div>
-<div id="intro" class="overlay"><div class="intro-card"><span class="eyebrow">ברוכות הבאות לגני הארמון</span><h2>שלוש נסיכות.<br><em>כתר אחד למנצחת.</em></h2><p>את משחקת בתור בל! רוצי בין הפרחים, דלגי מעל המכשולים והגיעי ראשונה לארמון.</p><div id="portraits" class="portraits"></div><button id="start" class="primary">קדימה, למרוץ! <span>←</span></button><div class="instructions"><span><kbd>←</kbd><kbd>→</kbd> לזוז</span><span><kbd>↑</kbd> לקפוץ</span><span><kbd>רווח</kbd> להאיץ</span></div><small class="touch-note">בטלפון משחקים עם הכפתורים למטה</small></div></div>
-<div id="paused" class="overlay" hidden><div class="finish-card"><span class="eyebrow">רגע לנשום</span><h2>המרוץ מחכה לך ♡</h2><button id="resume" class="primary">ממשיכות לרוץ ←</button></div></div>
-<div id="finish" class="overlay" hidden><canvas id="fireworks" aria-hidden="true"></canvas><div class="finish-card"><span class="eyebrow">✦ חגיגה בגני הארמון ✦</span><div id="winner-art"></div><h2 id="winner-name"></h2><p id="winner-message"></p><button id="replay" class="primary">עוד מרוץ! <span>↻</span></button><a href="../../" class="finish-home">חזרה לבית המשחקים</a></div></div></section>
-<footer class="bottom"><p>כל הדרך היא הרפתקה <span>✦</span> הראשונה בארמון מנצחת</p><div class="controls" aria-label="כפתורי המשחק"><div class="steering"><button data-control="left" aria-label="זוזי שמאלה">←</button><button data-control="right" aria-label="זוזי ימינה">→</button></div><button data-control="jump" class="jump" aria-label="קפצי">↑ <span>קפיצה</span></button><button data-control="sprint" class="sprint" aria-label="החזיקי לריצה מהירה">✦ <span>מהר!</span></button></div><p id="announcement" class="sr-only" aria-live="polite"></p></footer></main><script type="module" src="game.js"></script></body></html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#e9e4cf">
+  <meta name="description" content="מרוץ הנסיכות של אלה: מרוץ ארוך בגני הוורדים, ליד האגם ועד הארמון. מחזיקים רווח לספרינט.">
+  <title>מרוץ הנסיכות של אלה</title>
+  <link rel="canonical" href="https://my-kids-inventing-games.hai-rozen.workers.dev/games/princess-race/">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="../hogwarts/vendor/babylon.js" defer></script>
+  <script type="module" src="game.js"></script>
+</head>
+<body data-phase="ready">
+  <main class="app">
+    <header class="top">
+      <a class="home" href="../../" aria-label="חזרה לבית המשחקים">↗ <span>כל המשחקים</span></a>
+      <div class="brand"><span class="eyebrow">המסע החדש בגני הארמון</span><h1>מרוץ הנסיכות <em>של אלה</em></h1></div>
+      <span class="credit">נוצר על ידי אלה ♡</span>
+    </header>
+    <section class="arena" aria-label="מסלול המרוץ בגני הארמון">
+      <canvas id="game" tabindex="0" aria-label="מרוץ הנסיכות בתלת־ממד. חיצים ימינה ושמאלה לתנועה, חץ למעלה לקפיצה. מחזיקים רווח לספרינט."></canvas>
+      <div class="hud" hidden aria-label="מצב המרוץ">
+        <div class="position"><small>המקום שלך</small><strong dir="ltr"><span id="rank-number">1</span><i>/ 3</i></strong></div>
+        <div class="race-progress"><div class="progress-label"><span id="district">גני הוורדים</span><b id="percent">0%</b></div><div class="progress-track"><i id="progress"></i></div><small id="distance-left">1,200 מטר לארמון</small></div>
+        <div class="race-clock"><b id="race-time" dir="ltr">0:00</b><small>זמן המרוץ</small></div>
+        <button id="pause" class="pause" aria-label="השהיית המרוץ">Ⅱ</button>
+      </div>
+      <div id="status" class="status" hidden></div>
+      <div id="intro" class="overlay intro-overlay">
+        <div class="intro-card">
+          <span class="eyebrow">נוצר על ידי אלה <span aria-hidden="true">✦</span> עולם של נסיכות</span>
+          <h2>הדרך לארמון <br><em>ארוכה וקסומה יותר.</em></h2>
+          <p>את בל! מרוץ בין הוורדים, לאורך האגם ועד שערי הארמון. זזים, קופצים ועוקפים בדרך לכתר.</p>
+          <div id="portraits" class="portraits"></div>
+          <div class="special"><span aria-hidden="true">✦</span><div><b>רווח = ספרינט</b><small>מחזיקים כדי לרוץ מהר יותר</small></div><kbd>רווח</kbd></div>
+          <button id="start" class="primary" disabled>קדימה, למרוץ! <span aria-hidden="true">←</span></button>
+          <div class="race-facts"><span>1,200 מטר</span><span>בערך שתי דקות</span><span>שלושה גנים לגלות</span></div>
+          <div class="instructions"><span><kbd>← →</kbd> לזוז</span><span><kbd>↑</kbd> לקפוץ</span><span><kbd>רווח</kbd> ספרינט</span></div>
+          <small class="touch-note">אפשר גם לשחק עם הכפתורים שעל המסך</small>
+        </div>
+        <div class="world-caption"><span aria-hidden="true">✧</span> כל שביל מוביל להרפתקה חדשה</div>
+      </div>
+      <div id="paused" class="overlay modal-overlay" hidden>
+        <div class="finish-card"><span class="eyebrow">רגע לנשום בין הפרחים</span><h2>המרוץ מחכה לך ♡</h2><p>הזמן נעצר. ממשיכות בדיוק מאותו מקום.</p><button id="resume" class="primary">ממשיכות לרוץ ←</button><button id="restart" class="secondary">מתחילות מרוץ חדש</button></div>
+      </div>
+      <div id="finish" class="overlay finish-overlay" hidden>
+        <canvas id="fireworks" aria-hidden="true"></canvas>
+        <div class="finish-card"><span class="eyebrow">חגיגה בגני הארמון</span><div id="winner-art"></div><h2 id="winner-name"></h2><p id="winner-message"></p><small id="finish-time"></small><button id="replay" class="primary">עוד מרוץ! <span aria-hidden="true">↻</span></button><a href="../../" class="finish-home">חזרה לכל המשחקים</a></div>
+      </div>
+      <div id="error" class="overlay modal-overlay" hidden role="alert"><div class="finish-card"><h2>הגנים עוד לא נפתחו</h2><p>אפשר לנסות שוב או לפתוח בדפדפן שתומך בתלת־ממד.</p><button id="retry" class="primary">מנסות שוב ←</button><a href="../../" class="finish-home">חזרה לכל המשחקים</a></div></div>
+    </section>
+    <footer class="bottom">
+      <div id="boost-state" class="boost-state">רווח · ספרינט</div>
+      <div class="controls" aria-label="כפתורי המשחק">
+        <div class="steering"><button data-control="left" aria-label="זוזי שמאלה" aria-pressed="false">←</button><button data-control="right" aria-label="זוזי ימינה" aria-pressed="false">→</button></div>
+        <button data-control="jump" class="jump" aria-label="קפצי" aria-pressed="false">↑ <span>קפיצה</span></button>
+        <button data-control="sprint" class="sprint" aria-label="החזיקי לספרינט" aria-pressed="false">✦ <span>ספרינט</span></button>
+      </div>
+      <p id="announcement" class="sr-only" aria-live="polite"></p>
+    </footer>
+  </main>
+  <noscript>כדי לשחק במרוץ הנסיכות צריך לאפשר JavaScript. <a href="../../">חזרה לכל המשחקים</a></noscript>
+</body>
+</html>

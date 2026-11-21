@@ -32,14 +32,39 @@ test('arrows steer physically left/right within track and up jumps then lands', 
   assert.ok(belle.jumpHeight > 0.6);
 });
 
-test('holding sprint makes Belle faster and releasing returns to running', () => {
+test('holding sprint makes only Belle faster and releasing returns to running', () => {
   const walk = startRace(createRace());
   const sprint = startRace(createRace());
   run(walk, 2);
   run(sprint, 2, { sprint: true });
   assert.ok(sprint.racers[0].distance > walk.racers[0].distance + 5);
+  assert.equal(sprint.racers[0].sprinting, true);
+  for (const rival of sprint.racers.filter(racer => racer.id !== 'belle')) {
+    const normal = walk.racers.find(racer => racer.id === rival.id);
+    assert.equal(rival.distance, normal.distance);
+    assert.equal(rival.speed, normal.speed);
+    assert.equal(rival.sprinting, false);
+  }
   run(sprint, 1);
   assert.equal(sprint.racers[0].speed, walk.racers[0].speed);
+  assert.equal(sprint.racers[0].sprinting, false);
+});
+
+test('Belle owns the controls and boost even if racers are stored in a different order', () => {
+  const normal = startRace(createRace());
+  const boosted = startRace(createRace());
+  normal.racers.reverse();
+  boosted.racers.reverse();
+  run(normal, 2);
+  run(boosted, 2, { sprint: true, right: true });
+  const belle = boosted.racers.find(racer => racer.id === 'belle');
+  assert.equal(belle.x, 1);
+  assert.equal(belle.sprinting, true);
+  assert.ok(belle.distance > normal.racers.find(racer => racer.id === 'belle').distance + 5);
+  for (const rival of boosted.racers.filter(racer => racer.id !== 'belle')) {
+    assert.equal(rival.sprinting, false);
+    assert.equal(rival.distance, normal.racers.find(racer => racer.id === rival.id).distance);
+  }
 });
 
 test('a bump slows once, recovers, and a well-timed jump clears the obstacle', () => {
@@ -79,19 +104,22 @@ test('each racer can win and the first crossing wins even within one frame', () 
   assert.equal(race.winner.id, 'felice');
 });
 
-test('beginner race lasts 35–60 seconds: sprint can win, unattended Belle can lose', () => {
+test('the longer course lasts 95–130 seconds: sprint can win, unattended Belle can lose', () => {
   const sprint = startRace(createRace());
   const unattended = startRace(createRace());
-  run(sprint, 60, { sprint: true });
-  run(unattended, 60);
+  run(sprint, 150, { sprint: true });
+  run(unattended, 150);
   assert.equal(sprint.winner.id, 'belle');
   assert.notEqual(unattended.winner.id, 'belle');
-  for (const race of [sprint, unattended]) assert.ok(race.elapsed >= 35 && race.elapsed <= 60);
+  assert.equal(TRACK_LENGTH, 1200);
+  for (const race of [sprint, unattended]) assert.ok(race.elapsed >= 95 && race.elapsed <= 130);
+  assert.ok(sprint.obstacles.some(obstacle => obstacle.distance > 1100));
+  assert.ok(sprint.obstacles.every(obstacle => obstacle.distance > 0 && obstacle.distance < TRACK_LENGTH));
 });
 
 test('fresh restart is independent of the old race', () => {
   const oldRace = startRace(createRace());
-  run(oldRace, 60, { sprint: true });
+  run(oldRace, 150, { sprint: true });
   const fresh = createRace();
   assert.equal(fresh.phase, 'ready');
   assert.equal(fresh.winner, null);
@@ -102,7 +130,7 @@ test('fresh restart is independent of the old race', () => {
 });
 
 test('outcome and movement stay stable at 30, 60 and 144 frames per second', () => {
-  const races = [30, 60, 144].map(fps => run(startRace(createRace()), 60, { sprint: true }, fps));
+  const races = [30, 60, 144].map(fps => run(startRace(createRace()), 150, { sprint: true }, fps));
   for (const race of races.slice(1)) {
     assert.equal(race.winner.id, races[0].winner.id);
     assert.ok(Math.abs(race.elapsed - races[0].elapsed) < 0.00001);
