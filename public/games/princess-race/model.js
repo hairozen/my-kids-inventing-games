@@ -1,4 +1,4 @@
-export const TRACK_LENGTH = 500;
+export const TRACK_LENGTH = 1200;
 export const RACERS = [
   { id: 'belle', name: 'בל', color: '#ffd75b' },
   { id: 'felice', name: 'פליס', color: '#ed8fce' },
@@ -13,12 +13,12 @@ export function createRace() {
     phase: 'ready', elapsed: 0, winner: null, accumulator: 0, jumpHeld: false,
     racers: RACERS.map((racer, index) => ({
       ...racer, x: index - 1, distance: 0, jumpHeight: 0,
-      jumpVelocity: 0, slowRemaining: 0, speed: 0, bumpCount: 0,
+      jumpVelocity: 0, slowRemaining: 0, speed: 0, sprinting: false, bumpCount: 0,
       passedObstacles: new Set(),
     })),
-    obstacles: Array.from({ length: 10 }, (_, index) => ({
-      id: `obstacle-${index}`, distance: 48 + index * 43,
-      x: [0, -1, 1, 0, 1, -1, 0, -1, 1, 0][index],
+    obstacles: Array.from({ length: 25 }, (_, index) => ({
+      id: `obstacle-${index}`, distance: 48 + index * 45,
+      x: [0, -1, 1, 0, 1, -1, 0, -1, 1, 0][index % 10],
     })),
   };
 }
@@ -33,7 +33,8 @@ function tick(state, input, dt) {
   for (const [index, racer] of state.racers.entries()) {
     let steer = 0;
     let jump = false;
-    if (index === 0) {
+    const isBelle = racer.id === 'belle';
+    if (isBelle) {
       steer = Number(Boolean(input.right)) - Number(Boolean(input.left));
       jump = Boolean(input.jump) && !state.jumpHeld;
     } else {
@@ -53,8 +54,9 @@ function tick(state, input, dt) {
     racer.jumpVelocity -= 15 * dt;
     if (racer.jumpHeight === 0) racer.jumpVelocity = 0;
     racer.slowRemaining = Math.max(0, racer.slowRemaining - dt);
-    const baseSpeed = index === 0 ? (input.sprint ? 12.4 : 9.5)
-      : 10.5 + (index === 2 ? 0.12 : 0) + Math.sin(state.elapsed * 0.7 + index * 2) * 0.4;
+    racer.sprinting = isBelle && Boolean(input.sprint);
+    const baseSpeed = isBelle ? (racer.sprinting ? 12.4 : 9.5)
+      : racer.id === 'torres' ? 10.62 : 10.5;
     racer.speed = baseSpeed * (racer.slowRemaining > 0 ? 0.48 : 1);
     const previous = racer.distance;
     racer.distance += racer.speed * dt;

@@ -32,23 +32,29 @@ Catch colorful water droplets with funny faces before they disappear. You have o
 
 ## 🏰 Lavie’s Fortress Cannons — תותחי המבצרים
 
-A first-person paint battle invented by Lavie. Join two computer teammates against three opponents, collect golden keys, and capture the three middle forts. Home forts stay protected. A round lasts three minutes; the team holding more forts wins. Easy, medium, and hard change the opponents’ firing speed and aim.
+A three-team paint battle invented by Lavie, seen from above. Join the green team against red and yellow. Each team starts with one of three towers, and all towers can change hands when sprayed with paint. Two automatic cannons start green; rivals can capture them, and friendly paint refills them. The team holding the most towers after three minutes wins.
 
-[![Lavie’s Fortress Cannons: a first-person view of the forts and golden keys](public/assets/fortress-cannons.png)](https://my-kids-inventing-games.hai-rozen.workers.dev/games/fortress-cannons/)
+The 120 × 120 arena has white porcelain paving, eight cover obstacles, three landmark towers, and two cannons. A close overhead camera follows the player, while a minimap shows the entire arena and the current camera footprint. Characters have white bodies with team-colored overalls. The controlled character is larger and has a dark selection ring and an `אני` marker.
 
-Use **arrow keys** to move, the **mouse** to look sideways, **Space** to fire paint, and **Enter** to place a guard after walking into a glowing circle. **Escape** pauses and releases the mouse. If the browser does not capture the mouse, drag on the game view to look. The hero’s single heart takes five hits; guards have three hearts. Soft original music has a mute button.
+[![Lavie’s Fortress Cannons: an overhead paint arena with three towers and shape-coded teams](public/assets/fortress-cannons.png)](https://my-kids-inventing-games.hai-rozen.workers.dev/games/fortress-cannons/)
 
-The first version uses a ready-made hero; character customization is deferred. The confirmed rules and explicitly chosen first-version defaults are in [the design notes](docs/third-game-design.md). All new geometry, game code, and music are original. The game reuses this repository’s bundled Babylon.js runtime.
+Use **arrow keys or WASD** to move and face a direction, then **Space** to spray paint. The mouse can aim and spray with a click or hold. On-screen direction and spray buttons support touch. **Escape** pauses. After five paint hits, a character returns beside the closest tower their team owns; if none remain, they return to the center. Circles, squares, triangles, and labels identify the teams alongside their colors. Soft original music has a mute button.
+
+The characters have no gender; character customization remains deferred. [The design notes](docs/third-game-design.md) distinguish Lavie’s confirmed rules from developer-selected defaults and preserve the old first-person version’s history. All geometry, game code, and music are original. The game reuses this repository’s bundled Babylon.js runtime and has no dependency on another local repository.
+
+[Verification notes](docs/fortress-cannons-verification.md) distinguish simulation checks, browser interaction, and deployment checks.
 
 **[Play Fortress Cannons →](https://my-kids-inventing-games.hai-rozen.workers.dev/games/fortress-cannons/)**
 
 ## 👑 Ella’s princess race
 
-Ella plays as Belle (בל), racing Felice (פליס) and Torres (טורס) through a palace garden. Belle moves forward automatically: left/right arrows steer, up jumps, and holding Space sprints. On-screen buttons support touch. The obstacles are spaced apart; bumping one only slows the racer briefly. The first princess across the finish line gets a sign with her name and fireworks, then the race can be played again.
+Ella plays as Belle (בל), racing Felice (פליס) and Torres (טורס) through a 3D royal garden. The 1,200-metre course passes rose gardens, a lakeside promenade, and the palace approach. A complete race takes roughly 100–115 seconds in deterministic full-race checks. Belle moves forward automatically: left/right arrows steer, up jumps, and holding Space activates sprint. On-screen buttons support touch.
 
-[![Ella’s princess race: Belle, Felice, and Torres racing through the palace garden](public/assets/princess-race.png)](https://my-kids-inventing-games.hai-rozen.workers.dev/games/princess-race/)
+The longer route has 25 spaced obstacles. Bumping one slows the racer briefly. The first princess across the finish line gets a sign with her name and fireworks, then the race can be played again.
 
-This is an independent game with original artwork and rules. [The glossary](GLOSSARY.md) records each child’s characters and game terms in separate sections.
+[![Ella’s princess race: three 3D princesses racing through flowering royal gardens](public/assets/princess-race.png)](https://my-kids-inventing-games.hai-rozen.workers.dev/games/princess-race/)
+
+This is an independent game with original artwork and rules, using the repository's bundled Babylon.js engine. [The glossary](GLOSSARY.md) records each child's characters and game terms in separate sections. [Verification notes](tests/princess-race/README.md) distinguish current checks from the original version's history.
 
 **[Play the princess race →](https://my-kids-inventing-games.hai-rozen.workers.dev/games/princess-race/)**
 
@@ -68,7 +74,7 @@ npm run check
 npm test
 ```
 
-The games use plain HTML, CSS, and JavaScript. Hogwarts and Fortress Cannons share the local Babylon.js runtime bundled under Hogwarts’ vendor directory. There is no game backend or database. Game text is in Hebrew, with right-to-left layouts and a home button in each game.
+The games use plain HTML, CSS, and JavaScript. Hogwarts, Fortress Cannons, and Princess Race share the local Babylon.js runtime bundled under Hogwarts' vendor directory. There is no game backend or database. Game text is in Hebrew, with right-to-left layouts and a home button in each game.
 
 ## 🗂 Find your way around
 
